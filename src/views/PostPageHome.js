@@ -1,12 +1,20 @@
 import { useEffect, useState } from "react";
 import { Container, Image, Nav, Navbar, Row } from "react-bootstrap";
 import { Link } from "react-router-dom";
+import { collection, getDocs } from "firebase/firestore";
+import { db } from "../firebase";
 
 export default function PostPageHome() {
   const [posts, setPosts] = useState([]);
 
-   async function getAllPosts() {
-    setPosts([]);
+  async function getAllPosts() {
+    const query = await getDocs(collection(db, "posts"));
+    const posts = query.docs.map((doc) => {
+      // console.log(doc);
+      // console.log(doc.data());
+      return { id: doc.id, ...doc.data() };
+    });
+    setPosts(posts);
   }
 
   useEffect(() => {
@@ -44,15 +52,14 @@ function ImageSquare({ post }) {
       style={{
         width: "18rem",
         marginLeft: "1rem",
-        marginTop: "2rem",
-      }}
-    >
+        marginTop: "2rem"
+      }}>
       <Image
         src={image}
         style={{
           objectFit: "cover",
           width: "18rem",
-          height: "18rem",
+          height: "18rem"
         }}
       />
     </Link>
