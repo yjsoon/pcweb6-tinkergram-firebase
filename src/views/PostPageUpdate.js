@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
-import { Button, Container, Form, Nav, Navbar } from "react-bootstrap";
+import { Button, Container, Form } from "react-bootstrap";
 import { useParams } from "react-router-dom";
+import Navigation from "../components/Navigation";
 
 export default function PostPageUpdate() {
   const params = useParams();
@@ -20,16 +21,8 @@ export default function PostPageUpdate() {
   }, [id]);
 
   return (
-    <div>
-      <Navbar variant="light" bg="light">
-        <Container>
-          <Navbar.Brand href="/">Tinkergram</Navbar.Brand>
-          <Nav>
-            <Nav.Link href="/add">New Post</Nav.Link>
-            <Nav.Link href="/add">🚪</Nav.Link>
-          </Nav>
-        </Container>
-      </Navbar>
+    <>
+      <Navigation />
       <Container>
         <h1 style={{ marginBlock: "1rem" }}>Update Post</h1>
         <Form>
@@ -60,6 +53,6 @@ export default function PostPageUpdate() {
           </Button>
         </Form>
       </Container>
-    </div>
+    </>
   );
 }
