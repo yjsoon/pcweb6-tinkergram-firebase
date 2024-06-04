@@ -2,8 +2,9 @@ import React, { useEffect, useState } from "react";
 import { Card, Col, Container, Image, Row } from "react-bootstrap";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { useNavigate, useParams } from "react-router-dom";
-import { auth, db } from "../firebase";
+import { auth, db, storage } from "../firebase";
 import { deleteDoc, doc, getDoc } from "firebase/firestore";
+import { deleteObject, ref } from "firebase/storage";
 import Navigation from "../components/Navigation";
 
 export default function PostPageDetails() {
@@ -15,7 +16,20 @@ export default function PostPageDetails() {
   const navigate = useNavigate();
 
   async function deletePost(id) {
+    const postDocument = await getDoc(doc(db, "posts", id));
+    const post = postDocument.data();
     await deleteDoc(doc(db, "posts", id));
+
+    // Try to get the images/x.jpeg file path out of the full path
+    const url = new URL(post.image);
+    const pathParts = url.pathname.split("/");
+    let refPath = pathParts[pathParts.length - 1];
+    refPath = decodeURIComponent(refPath);
+    console.log(refPath);
+
+    const imageReference = ref(storage, refPath);
+    await deleteObject(imageReference);
+
     navigate("/");
   }
 
