@@ -6,7 +6,7 @@ export default function Navigation() {
   return (
     <Navbar variant="dark" bg="dark">
       <Container>
-        <Navbar.Brand href="/">Tinkergram</Navbar.Brand>
+        <Navbar.Brand href="/">Tinkergram2</Navbar.Brand>
         <Nav>
           <Nav.Link href="/add">New Post</Nav.Link>
           <Nav.Link onClick={(e) => signOut(auth)}>Sign Out</Nav.Link>
