@@ -1,24 +1,36 @@
 import React, { useEffect, useState } from "react";
 import { Button, Container, Form } from "react-bootstrap";
-import { useParams } from "react-router-dom";
 import Navigation from "../components/Navigation";
+import { useAuthState } from "react-firebase-hooks/auth";
+import { useNavigate, useParams } from "react-router-dom";
+import { db, auth } from "../firebase";
+import { doc, getDoc, updateDoc } from "firebase/firestore";
 
 export default function PostPageUpdate() {
   const params = useParams();
   const id = params.id;
   const [caption, setCaption] = useState("");
   const [image, setImage] = useState("");
+  const [user, loading] = useAuthState(auth);
+  const navigate = useNavigate();
 
-  async function updatePost() {}
+  async function updatePost() {
+    await updateDoc(doc(db, "posts", id), { caption, image });
+    navigate("/post/" + id); // send back to the details page
+  }
 
   async function getPost(id) {
-    setCaption("");
-    setImage("");
+    const postDocument = await getDoc(doc(db, "posts", id));
+    const post = postDocument.data();
+    setCaption(post.caption);
+    setImage(post.image);
   }
 
   useEffect(() => {
+    if (loading) return;
+    if (!user) navigate("/login");
     getPost(id);
-  }, [id]);
+  }, [id, loading, navigate, user]);
 
   return (
     <>
